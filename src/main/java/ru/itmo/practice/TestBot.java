@@ -9,11 +9,14 @@ import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.exceptions.TelegramApiException;
+import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
 
 @Log4j
 public class TestBot extends TelegramLongPollingBot {
 
-    @SneakyThrows
+    @SneakyThrows(TelegramApiRequestException.class)
+    @SuppressWarnings("unchecked")
     public static void main(String[] args) {
         ApiContextInitializer.init();
         new TelegramBotsApi()
@@ -31,6 +34,7 @@ public class TestBot extends TelegramLongPollingBot {
     }
 
     @Override
+    @SneakyThrows
     public void onUpdateReceived(Update upd) {
         Message msg = upd.getMessage();
         if (msg != null && msg.hasText()) {
@@ -45,8 +49,8 @@ public class TestBot extends TelegramLongPollingBot {
         }
     }
 
-    @SuppressWarnings("deprecation")
-    @SneakyThrows
+    @SneakyThrows(TelegramApiException.class)
+    @SuppressWarnings({"deprecation", "unchecked"})
     private void sendMsg(Message msg, String text) {
         SendMessage sendMsg = new SendMessage()
                 .enableMarkdown(true)
